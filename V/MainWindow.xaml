@@ -17,46 +17,66 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid>
-
-        <CheckBox
-            Width="50"
-            Height="50"
-            Style="{StaticResource CheckBoxShow}" 
-            MouseEnter="CheckBox_MouseEnter"
-            MouseLeave="CheckBox_MouseLeave"
-            IsChecked="{Binding CheckBoreder}"
-            />
-        <Border
-            local:AnimationsHelper.AnimateY="{Binding BorderY}"
-            Margin="0,-110"
-            Width="400"
-            Height="100"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Background="AliceBlue"
-            BorderBrush="#22000000"
-            BorderThickness="1"
-            CornerRadius="10"
-            MouseEnter="Border_MouseEnter"
-            MouseLeave="Border_MouseLeave"
-            >
-            <TextBlock
-                Text="{Binding Textshows}"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border
+                    local:AnimationsHelper.AnimateOpacity="{Binding ButtonCheckShow}"
+                    local:AnimationsHelper.AnimateX="{Binding BorderX}"
+                    MouseEnter="Border_MouseEnter"
+                    MouseLeave="Border_MouseLeave"
+                    Visibility="{Binding ButtonCanCheck}">
+                    <Button
+                        Width="80"
+                        Height="40"
+                        Background="SeaGreen" />
+                </Border>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <CheckBox
+                Width="50"
+                Height="50"
+                IsChecked="{Binding CheckBoreder}"
+                MouseEnter="CheckBox_MouseEnter"
+                MouseLeave="CheckBox_MouseLeave"
+                Style="{StaticResource CheckBoxShow}" />
+            <Border
+                Grid.ColumnSpan="3"
+                Width="400"
+                Height="100"
+                Margin="-100,-110"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="16"
-                Foreground="Black" />
-            <Border.Effect>
-                <DropShadowEffect
-                    x:Name="shadowEffect"
-                    BlurRadius="20"
-                    Opacity="5"
-                    ShadowDepth="0"
-                    Color="#11100000" />
-            </Border.Effect>
-           
-        </Border>
+                VerticalAlignment="Bottom"
+                local:AnimationsHelper.AnimateY="{Binding BorderY}"
+                Background="AliceBlue"
+                BorderBrush="#22000000"
+                BorderThickness="1"
+                CornerRadius="10"
+                MouseEnter="Border_MouseEnter"
+                MouseLeave="Border_MouseLeave">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="Black"
+                    Text="{Binding Textshows}" />
+                <Border.Effect>
+                    <DropShadowEffect
+                        x:Name="shadowEffect"
+                        BlurRadius="20"
+                        Opacity="5"
+                        ShadowDepth="0"
+                        Color="#11100000" />
+                </Border.Effect>
 
+            </Border>
+        </Grid>
     </Grid>
 </mah:MetroWindow>

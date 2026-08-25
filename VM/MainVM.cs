@@ -22,8 +22,15 @@ namespace show
         [ObservableProperty]
         private double borderY = 1;
 
-        private bool CanMove() => IsMouseHover;
+        //button的可见性和淡入淡出
+        [ObservableProperty]
+        private double buttonCheckShow;
 
+        [ObservableProperty]
+        private bool buttonCanCheck;
+
+        [ObservableProperty]
+        private double borderX = 1;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -33,6 +40,7 @@ namespace show
         {
             // 取消之前的延迟操作
             cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
             cancellationTokenSource = new CancellationTokenSource();
 
             try
@@ -40,6 +48,10 @@ namespace show
                 if (IsMouseHover || IsMouseHoverBorder || CheckBoreder)
                 {
                     BorderY = -120;
+
+                    BorderX = 1;
+                    ButtonCheckShow = 1;
+                    ButtonCanCheck = true;
                 }
                 else 
                 {
@@ -49,6 +61,11 @@ namespace show
                     if (!IsMouseHover && !IsMouseHoverBorder && !CheckBoreder)
                     {
                         BorderY = 1;
+
+                        BorderX = -10;
+                        ButtonCheckShow = 0;
+                        ButtonCanCheck = false;
+
                     }
                 }
             }
@@ -84,6 +101,7 @@ namespace show
         {
             Textshow();
             BorderMove();
+
         }
 
         partial void OnIsMouseHoverBorderChanged(bool value) 
