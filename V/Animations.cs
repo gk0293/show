@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Microsoft.Xaml.Behaviors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Media3D;
 
 namespace show
@@ -174,6 +177,79 @@ namespace show
                 };
                 //将动画应用到 TranslateTransform 的 Y 属性
                 element.BeginAnimation(UIElement.OpacityProperty, animation);
+            }
+        }
+    }
+
+
+    public class WindowShadowTrackingBehavior : Behavior<FrameworkElement>
+    {
+        private Window _parentWindow;
+        // 设定一个最大影响半径，超过这个距离阴影偏移量不再增加
+        private const double MaxInfluenceRadius = 300;
+        private const double MaxShadowDepth = 10;
+
+        protected override void OnAttached()
+        {
+            base.OnAttached();
+
+            // 1. 获取该 Border 所在的 Window
+            _parentWindow = Window.GetWindow(AssociatedObject);
+
+            if (_parentWindow != null)
+            {
+                // 2. 监听 Window 的 MouseMove 事件
+                // 使用 AddHandler 并设置 handledEventsToo = true，防止事件被窗口内的其他控件(如TextBox)拦截
+                _parentWindow.AddHandler(UIElement.MouseMoveEvent, new MouseEventHandler(OnWindowMouseMove), true);
+                _parentWindow.MouseLeave += OnWindowMouseLeave;
+            }
+        }
+
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            if (_parentWindow != null)
+            {
+                _parentWindow.RemoveHandler(UIElement.MouseMoveEvent, new MouseEventHandler(OnWindowMouseMove));
+                _parentWindow.MouseLeave -= OnWindowMouseLeave;
+            }
+        }
+
+        private void OnWindowMouseMove(object sender, MouseEventArgs e)
+        {
+            var shadow = AssociatedObject.Effect as DropShadowEffect;
+            if (shadow == null) return;
+
+            // 3. 核心魔法：获取鼠标相对于 Border 的坐标
+            // 即使事件是在 Window 触发的，WPF 的 GetPosition 也能自动帮你算出相对于 Border 的坐标！
+            Point mousePos = e.GetPosition(AssociatedObject);
+
+            double centerX = AssociatedObject.ActualWidth / 2;
+            double centerY = AssociatedObject.ActualHeight / 2;
+
+            // 4. 计算相对偏移
+            double dx = mousePos.X - centerX;
+            double dy = mousePos.Y - centerY;
+
+            // 5. 计算角度 (Direction)
+            double angleRad = Math.Atan2(dy, -dx);
+            shadow.Direction = (angleRad * 180 / Math.PI + 360) % 360;
+
+            // 6. 计算深度 (ShadowDepth)
+            double distance = Math.Sqrt(dx * dx + dy * dy);
+
+            // 注意：因为鼠标在整个窗口移动，距离可能会非常大。
+            // 我们需要将距离映射到 0 ~ MaxShadowDepth 之间
+            double depth = (distance / MaxInfluenceRadius) * MaxShadowDepth;
+            shadow.ShadowDepth = Math.Min(depth, MaxShadowDepth); // 限制最大偏移量
+        }
+
+        private void OnWindowMouseLeave(object sender, MouseEventArgs e)
+        {
+            // 鼠标离开窗口时，阴影恢复居中
+            if (AssociatedObject.Effect is DropShadowEffect shadow)
+            {
+                shadow.ShadowDepth = 0;
             }
         }
     }

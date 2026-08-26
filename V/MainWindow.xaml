@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:show"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     Title="MainWindow"
     Width="800"
     Height="450"
@@ -46,7 +47,14 @@
                 IsChecked="{Binding CheckBoreder}"
                 MouseEnter="CheckBox_MouseEnter"
                 MouseLeave="CheckBox_MouseLeave"
-                Style="{StaticResource CheckBoxShow}" />
+                Style="{StaticResource CheckBoxShow}" >
+                <b:Interaction.Behaviors>
+                <local:WindowShadowTrackingBehavior />
+                </b:Interaction.Behaviors>
+                <CheckBox.Effect>
+                    <DropShadowEffect Color="Black" BlurRadius="15" Opacity="0.4" ShadowDepth="0"/>
+                </CheckBox.Effect>
+            </CheckBox>
             <Border
                 Grid.ColumnSpan="3"
                 Width="400"

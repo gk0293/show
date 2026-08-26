@@ -32,6 +32,7 @@ namespace show
         [ObservableProperty]
         private double borderX = 1;
 
+  
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         //border悬浮判断,移入或点击
