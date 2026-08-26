@@ -12,7 +12,8 @@
     Height="450"
     mc:Ignorable="d">
     <Window.Resources>
-        <ResourceDictionary>
+        <ResourceDictionary>  
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Y/ShowDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -32,7 +33,7 @@
                     local:AnimationsHelper.AnimateX="{Binding BorderX}"
                     MouseEnter="Border_MouseEnter"
                     MouseLeave="Border_MouseLeave"
-                    Visibility="{Binding ButtonCanCheck}">
+                    Visibility="{Binding ButtonCanCheck , Converter={StaticResource BoolToVisConverter}}">
                     <Button
                         Width="80"
                         Height="40"

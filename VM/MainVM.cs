@@ -27,7 +27,7 @@ namespace show
         private double buttonCheckShow;
 
         [ObservableProperty]
-        private bool buttonCanCheck;
+        private bool buttonCanCheck = false;
 
         [ObservableProperty]
         private double borderX = 1;
