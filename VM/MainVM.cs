@@ -65,7 +65,11 @@ namespace show
 
                         BorderX = -10;
                         ButtonCheckShow = 0;
-                        ButtonCanCheck = false;
+                        _ = Task.Run(async () =>
+                        {
+                            await Task.Delay(400,cancellationTokenSource.Token);
+                            ButtonCanCheck = false;
+                        });
 
                     }
                 }
